@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<title>发送短信</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<head>
+<style type="text/css">
+.but{
+width:100%;
+color:red
+}
+</style>
+<script type="text/javascript">
+var count = 0;
+function addByScript(str) {
+var table = document.getElementById("tbl2");
+var newRow = table.insertRow(table.rows.length);
+newRow.id = "row" + count;
+var contentCell = newRow.insertCell(-1);
+contentCell.innerHTML = '<input type="text" id = "'+ count +'" value="' + str + '" />'
+contentCell = newRow.insertCell(-1);
+var delBtn = document.createElement("input");
+delBtn.type = "button";
+delBtn.className = "button";
+delBtn.id = "btnDel"+count;
+delBtn.value = "删除";
+delBtn.onclick = new Function("del(this)");
+contentCell.appendChild(delBtn);
+count++;
+}
+function del(obj) {
+var row = obj.parentNode.parentNode;
+row.parentNode.removeChild(row);
+count--;
+}
+</script>
+<script type="text/javascript">
+var mobileCount = 0;
+function addMobileByScript(str) {
+var table = document.getElementById("tbl1");
+var newRow = table.insertRow(table.rows.length);
+newRow.id = "row" + mobileCount;
+var contentCell = newRow.insertCell(-1);
+contentCell.innerHTML = '<input type="text" id = "'+ mobileCount +'" value="' + str + '" />'
+contentCell = newRow.insertCell(-1);
+var delBtn = document.createElement("input");
+delBtn.type = "button";
+delBtn.className = "button";
+delBtn.id = "btnDel"+count;
+delBtn.value = "删除";
+delBtn.onclick = new Function("del(this)");
+contentCell.appendChild(delBtn);
+mobileCount++;
+}
+function del(obj) {
+var row = obj.parentNode.parentNode;
+row.parentNode.removeChild(row);
+mobileCount--;
+}
+</script>
+<script type="text/javascript">
+var phones = '';
+function checkNum()
+{
+var moblieStr ='';
+var numStr = '';
+var temp = '';
+var numTemp ='';
+var index_space = 0;
+var index__ = 0;
+var tailNum = '';//固定电话号码
+var frontNum = '';//区号
+var moblielist;
+if(document.getElementById("tbl1").childNodes[1]==null){
+	alert('tbl1 null');
+moblielist = document.getElementById("tbl1").childNodes[0].childNodes;
+}
+else{
+	alert('tble1 not null');
+	if(document.getElementById("tbl1").childNodes[0].childNodes.length>0){
+		moblielist = document.getElementById("tbl1").childNodes[0].childNodes;
+	}else{
+    moblielist = document.getElementById("tbl1").childNodes[1].childNodes;
+}
+}
+alert(moblielist+":"+moblielist.length);
+for(var i =0;i<moblielist.length;i++)
+{
+temp=moblielist[i].childNodes[0].childNodes[0].value;
+moblieStr = moblieStr+temp+' ';
+}
+
+var numlist;
+if(document.getElementById("tbl2").childNodes[1]==null)
+{
+	alert('!null');
+numlist = document.getElementById("tbl2").childNodes[0].childNodes;
+}
+else
+{
+	if(document.getElementById("tbl2").childNodes[0].childNodes.length>0){
+		numlist = document.getElementById("tbl2").childNodes[0].childNodes;
+	}else{
+	alert('tbl2 not null');
+numlist = document.getElementById("tbl2").childNodes[1].childNodes;
+}
+}
+
+alert(numlist+":"+numlist.length);
+alert('numlist.length'+numlist.length);
+for(var i =0;i<numlist.length;i++)
+{
+	alert('!'+1);
+temp=numlist[i].childNodes[0].childNodes[0].value;
+numStr = numStr+temp+' ';
+}
+
+
+//移动电话号码合法性检测
+if(moblielist == '')
+{
+alert('没有移动电话号码，请检查');
+return false;
+}
+var moblieTemp = moblieStr;
+var numTemp = numStr;
+var count = 0;
+while(moblieTemp.length != parseInt('0'))
+{
+count++;
+var temp = moblieTemp.substring(0,12);
+var tempLen = temp.length;
+if(12 != tempLen)
+{
+alert('第'+count+'个移动电话号码有误，请检查'+'t1');
+return fasle;
+}
+for(var i=0;i<11;i++)
+{
+if(!(temp.substring(i,i+1)>='0' && temp.substring(i,i+1)<='9'))
+{
+alert('第'+count+'个移动电话号码有误，请检查'+'t2');
+return false;
+}
+}
+if(' ' != temp.substring(11,12))
+{
+alert('第'+count+'个移动电话号码有误，请检查'+'t3');
+return false;
+}
+moblieTemp = moblieTemp.substring(12);
+if(moblieTemp.length<parseInt('12') && moblieTemp.length != parseInt('0'))
+{
+count++;
+alert('第'+count+'个移动电话号码有误，请检查'+'t4');
+return false;
+}
+}
+count = 0;
+
+alert('test numStr'+numStr);
+//固定电话合法性检测
+if('' == numStr)
+{
+alert('没有固定电话号码，请检查');
+return false;
+}
+numTemp = numStr;
+while(numTemp.length != parseInt('0'))
+{
+count++;
+index_space = numTemp.indexOf(' ');
+temp = numTemp.substring(0,parseInt(index_space));
+//区号合法性检测
+index__ = temp.indexOf('-');
+if(parseInt(index__)>4)
+{
+alert('第'+count+'个固定电话区号有误，请检查');
+return false;
+}
+frontNum = temp.substring(0,parseInt(index__));
+for (var i = 0; i < frontNum.length; i++)
+{
+if(!(frontNum.substring(i,i+1)>='0' && frontNum.substring(i,i+1)<='9'))
+{
+alert('第'+count+'个固定电话区号有误，请检查');
+return false;
+}
+}
+//固定电话号码合法性检查
+tailNum = temp.substring(parseInt(index__)+1);
+if(tailNum.length<parseInt('5') || tailNum.length>parseInt('8'))
+{
+alert('第'+count+'个固定电话号码有误，请检查');
+return false;
+}
+for(var i=0;i<tailNum.length;i++)
+{
+if(!(tailNum.substring(i,i+1)>='0' && tailNum.substring(i,i+1)<='9'))
+{
+alert('第'+count+'个固定电话号码有误，请检查');
+return false;
+}
+}
+numTemp = numTemp.substring(parseInt(index_space)+1);
+}
+phones = moblieStr+'@'+numStr;
+return true;
+}
+</script>
+<script type="text/javascript">
+var message = '';
+function checkMessage()
+{
+message = document.getElementById("mes").value;
+if('' == message)
+{
+alert('没有输入短信，请检查');
+return false;
+}
+else if(message.length > parseInt('70'))
+{
+alert('短信内容超过70字符，请检查');
+return false;
+}
+//处理换行输出
+var index_n = 0;
+while(true)
+{
+var tail = '';
+var prve = '';
+alert('in');
+index_n = message.indexOf('\n');
+alert(index_n);
+if(parseInt(-1) == index_n)
+{
+break;
+}
+else
+{
+prve = message.substring(0,index_n);//前面
+tail = message.substring(index_n+1);
+//自定义的一个转移字符，当出现换行输出的时候，就在换行符处添加一个这个自定义的转移字符，在cgi程序解析的时候再变成换行符
+message = prve+'`'+tail;
+}
+}
+return true;
+}
+</script>
+<script type="text/javascript">
+function mysend(state)
+{
+var flag_phy = false;
+if('1' == state)
+{
+flag_phy = true;
+}
+else
+{
+alert('短息发送模块错误，请检查');
+window.location.reload();
+}
+if(true == checkNum() && true == checkMessage() && flag_phy)
+{
+alert('#1');
+var xmlhttp;
+if (window.XMLHttpRequest)
+{// code for IE7+, Firefox, Chrome, Opera, Safari
+xmlhttp=new XMLHttpRequest();
+alert('#2');
+}
+else
+{// code for IE6, IE5
+xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+xmlhttp.onreadystatechange=function()
+{
+alert('#3');
+if (xmlhttp.readyState==4 && xmlhttp.status==200)
+{
+alert("发送成功");
+}
+}
+xmlhttp.open("POST","message.cgi",true);
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send("phones="+phones+"&message="+message);
+}
+else
+{
+alert('faile');
+}
+}
+</script>
+</head>
+<body>
+<table>
+<tr>
+<td align="top" valign="top" id="nums">
+<fieldset id = "left" style="width:400px;">
+<legend>
+选择要发送的电话号码：
+</legend> <input type="button" class="button" value="新增" onclick="addMobileByScript('请输入电话号码')"/>
+<table id="tbl1">
+</table>
+<script type="text/javascript"> addMobileByScript('11223344556')</script>
+<script type="text/javascript"> addMobileByScript('18829344616')</script>
+</fieldset>
+</td> 
+<td align="top" valign="top" id="nums">
+<fieldset id = "center" style="width:400px;">
+<legend>
+选择要拨打的固定电话号码:
+例如:0917-4955231
+</legend> <input type="button" class="button" value="新增" onclick="addByScript('请输入固定电话号码')"/>
+<table id="tbl2">
+<script type="text/javascript"> addByScript('0917-4955231')</script>
+<script type="text/javascript"> addByScript('0917-4955123')</script>
+</fieldset>
+</td>
+<td align="left" valign="top">
+<fieldset id = "right" style="width:400px;">
+<legend >
+输入要发送的短信：
+</legend>
+<textarea name="message" id="mes" rows="5" cols="65">
+</textarea>
+<input type="button" class="but" value="发送" onclick="mysend('1')"/>
+</fieldset>
+</td>
+</tr>
+</table>
+</body>
+</html>
